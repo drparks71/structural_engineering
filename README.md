@@ -1,6 +1,7 @@
 # CivilPy
 Civil Engineering Modules (Fork of Buddyd16's Structural-Engineering Package)
-Library is currently being updated to support Python3.7
+
+Forked his library to update to support Python3.7
 
 Original Documentation Forked from buddyd16
 This is a collection of various scripts I have been and continue to work on for various day to day calculations. I intend to keep the scripts organized by design topic ie the folder structure presented. The intent is for the scripts to cover simple one off calculations so don't plan on any full building modeling programs. When things develope beyond simple scripts I'll create additional repositories that fit a better organizational structure.
