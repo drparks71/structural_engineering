@@ -7,6 +7,17 @@ Original Documentation Forked from buddyd16 -
 
 This is a collection of various scripts I have been and continue to work on for various day to day calculations. I intend to keep the scripts organized by design topic ie the folder structure presented. The intent is for the scripts to cover simple one off calculations so don't plan on any full building modeling programs. When things develope beyond simple scripts I'll create additional repositories that fit a better organizational structure.
 
+## Frame_2D_GUI.py or Frame_2D_GUI_metric.py
+Tkinter GUI based Python Program
+Requires the analysis folder and contained py files
+
+Currently and alpha level program. Load combinations have not been implemented in the back end but do show up in the graphical interface, so all loads input will be currently applied with a load factor of 1.
+
+Backend solver utilizes moment distribution. By default only the columns down provide vertical suppot and the solver performs a 2-pass moment distribution where after pass 1 the beam reactions are applied to the columns down and the columns are shortened by PL/AE pass 2 determines the fixed end moments created by the column shortening and then performs the distrubtion of those moments.
+
+In action:
+[Frame_2D.gif](images/frame_2d_windows.gif)
+
 ## Strap Beam - strap_beam_gui.py
 Tkinter GUI based Python Program
 requires the analysis folder and contained py files and the concrete folder and contained python files.
@@ -14,28 +25,30 @@ requires the analysis folder and contained py files and the concrete folder and 
 Currently an alpha level program there are several validation checks not being performed such as number of bars required in the strap actually fitting in the strap, etc.  No handling of foundation uplift base assumption of the program is positive bearing.
 
 In action:
-![Strap Beam gif](images/strap_gif.gif?raw=true "Strap Beam")
+[Strap Beam gif](images/strap_gif.gif)
 
 
 ## Concrete T beam - depends on concrete_beam_classes in the same directory
+### L and Asymmetric T's give the wrong solution, program does not rotate the neutral axis so the reported capacity has a hidden My component **
 Tkinter GUI based Python program.
 Provides various code defined capacities based on strain compatibility. Currently based on ACI 318-08. Calculates elevation
 of various steel reinf. layers based on clearance and spacing requirements per ACI 318-08.
 
 ## Concrete T Beam Any Steel - depends on concrete_beam_classes in the same directory
+### L and Asymmetric T's give the wrong solution, program does not rotate the neutral axis so the reported capacity has a hidden My component **
 Tkinter GUI based Python program
 Provides various code defined capacities based on strain compatibility. Allows for user assigned elevations of steel reinforcement
 layers. Does not check or provide for min spacing of tension layer bars nor maximum amount of bars that fit in a layer.
 
-## Simple Beam
+## Simple Beam - (metric version now available)
 Tkinter GUI based python program
-can solve for shear, moment, slope, and deflection of a simply supported beam with cantilevers at either end. Can apply any combination of point, point moment, uniform line, or trapezoidal loadings. Will automatically generate results curves and has the ability to find values at a specific location. Recently added the ability to solve for redundant interior reactions, simply add the result as a point load to verify deflection returns to 0 at the designated location. Can export an 11x17 pdf plot showing applied loads, reactions, shear, moment, slope, and deflection.
+can solve for shear, moment, slope, and deflection of a simply supported beam with cantilevers at either end. Can apply any combination of point, point moment, uniform line, or trapezoidal loadings. Will automatically generate results curves and has the ability to find values at a specific location. Recently added the ability to solve for redundant interior reactions, simply add the result as a point load to verify deflection returns to 0 at the designated location. Can export an html file plot showing reactions, shear, moment, slope, and deflection as well as other useful information such as the central span piecewise functions.
 
 Can be used to verify frame or fixed beam FEM results by applying point end moments returned by your 3rd party software, works on basis of superposition.
 
 
 In action:
-![Simple Beam gif](images/simple_gif.gif?raw=true "Simple Beam")
+[Simple Beam gif](images/simple_gif.gif)
 
 ## Three Moment Method
 ### Reworking to use the pin-pin class file and directly compute slope and deflection rather than rely on approx. integration. Also adding in point moments as a load type.

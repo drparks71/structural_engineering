@@ -1,29 +1,34 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Feb 16 09:37:43 2018
-
-@author: DonB
-"""
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License along
-# with this program; if not, write to the Free Software Foundation, Inc.,
-# 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+'''
+BSD 3-Clause License
+Copyright (c) 2019, Donald N. Bockoven III
+All rights reserved.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+* Neither the name of the copyright holder nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+'''
 
 from __future__ import division
 #import matplotlib.pyplot as plt
 
 class wood_stud_wall:
-    def __init__(self,b_in=1.5,d_in=3.5,height_ft=10, spacing_in=12, grade="No.2", fb_psi=875, fv_psi= 150, fc_psi=1150, E_psi=1400000, Emin_psi=510000, fc_perp_pl_psi=565, moisture_percent = 19, temp = 90, incised = 0,  num_plates = 0, c_frt=[1,1,1,1,1,1], compression_face=1, blocking_ft=0, no_sheathing=0):
+    def __init__(self,b_in=1.5,d_in=3.5,height_ft=10, spacing_in=12, grade="No.2", fb_psi=875, fv_psi= 150, fc_psi=1150, E_psi=1400000, Emin_psi=510000, fc_perp_pl_psi=565, moisture_percent = 19, temp = 90, incised = 0,  num_plates = 0, c_frt=[1,1,1,1,1,1], compression_face=1, blocking_ft=0, no_sheathing=0, is_syp=0):
         self.b_in = b_in
         self.d_in = d_in
         
@@ -70,91 +75,96 @@ class wood_stud_wall:
         #Size Factor, Cf
         #NDS 2005 section 4.3.6 and Table 4A
         #NOTE ASSUMES STUDS ARE VISUALLY GRADED DIMENSION LUMBER 2"-4" AND NOT SOUTHERN PINE AND NORTH AMERICAN SPECIES
-        self.assumptions = self.assumptions + 'Size Factor_Cf - Wall Studs are visually graded dimensional lumber 2" to 4" North American Species and not Southern Pine\n'
-        if grade == "Stud":
-            #Per NDS 2005 Table 4A for stud grade depth >8" use No.3 size factors
-            if self.d_in>11.25:
-                self.cf_fc = 0.9
-                if self.b_in>2.5:
+        if is_syp == 0:
+            self.assumptions = self.assumptions + 'Size Factor_Cf - Wall Studs are visually graded dimensional lumber 2" to 4" North American Species and not Southern Pine\n'
+            if grade == "Stud":
+                #Per NDS 2005 Table 4A for stud grade depth >8" use No.3 size factors
+                if self.d_in>11.25:
+                    self.cf_fc = 0.9
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.0
+                    else:
+                        self.cf_fb = 0.9
+                elif self.d_in>9.25:
+                    self.cf_fc = 1.0
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.1
+                    else:
+                        self.cf_fb = 1.0
+                elif self.d_in>7.25:
+                    self.cf_fc = 1.0
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.2
+                    else:
+                        self.cf_fb = 1.1
+                elif self.d_in>5.5:
+                    self.cf_fc = 1.05
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.3
+                    else:
+                        self.cf_fb = 1.2
+                elif self.d_in > 3.5:
                     self.cf_fb = 1.0
+                    self.cf_fc = 1.0
                 else:
-                    self.cf_fb = 0.9
-            elif self.d_in>9.25:
-                self.cf_fc = 1.0
-                if self.b_in>2.5:
+                    self.cf_fc = 1.05
                     self.cf_fb = 1.1
-                else:
+            elif grade == "Construction":
+                self.cf_fb = 1.0
+                self.cf_fc = 1.0
+            elif grade == "Utility":
+                if self.d_in > 2.5:
                     self.cf_fb = 1.0
-            elif self.d_in>7.25:
-                self.cf_fc = 1.0
-                if self.b_in>2.5:
-                    self.cf_fb = 1.2
+                    self.cf_fc = 1.0
                 else:
-                    self.cf_fb = 1.1
-            elif self.d_in>5.5:
-                self.cf_fc = 1.05
-                if self.b_in>2.5:
+                    self.cf_fc = 0.6
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.0
+                    else:
+                        self.cf_fb = 0.4
+            else:
+                if self.d_in>11.25:
+                    self.cf_fc = 0.9
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.0
+                    else:
+                        self.cf_fb = 0.9
+                elif self.d_in>9.25:
+                    self.cf_fc = 1.0
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.1
+                    else:
+                        self.cf_fb = 1.0
+                elif self.d_in>7.25:
+                    self.cf_fc = 1.0
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.2
+                    else:
+                        self.cf_fb = 1.1
+                elif self.d_in>5.5:
+                    self.cf_fc = 1.05
+                    if self.b_in>2.5:
+                        self.cf_fb = 1.3
+                    else:
+                        self.cf_fb = 1.2
+                elif self.d_in>4.5:
+                    self.cf_fc = 1.1
                     self.cf_fb = 1.3
+                elif self.d_in>3.5:
+                    self.cf_fc = 1.1
+                    self.cf_fb = 1.4
                 else:
-                    self.cf_fb = 1.2
-            elif self.d_in > 3.5:
-                self.cf_fb = 1.0
-                self.cf_fc = 1.0
-            else:
-                self.cf_fc = 1.05
-                self.cf_fb = 1.1
-        elif grade == "Construction":
-            self.cf_fb = 1.0
-            self.cf_fc = 1.0
-        elif grade == "Utility":
-            if self.d_in > 2.5:
-                self.cf_fb = 1.0
-                self.cf_fc = 1.0
-            else:
-                self.cf_fc = 0.6
-                if self.b_in>2.5:
-                    self.cf_fb = 1.0
-                else:
-                    self.cf_fb = 0.4
+                    self.cf_fc = 1.15
+                    self.cf_fb = 1.5
         else:
-            if self.d_in>11.25:
-                self.cf_fc = 0.9
-                if self.b_in>2.5:
-                    self.cf_fb = 1.0
-                else:
-                    self.cf_fb = 0.9
-            elif self.d_in>9.25:
-                self.cf_fc = 1.0
-                if self.b_in>2.5:
-                    self.cf_fb = 1.1
-                else:
-                    self.cf_fb = 1.0
-            elif self.d_in>7.25:
-                self.cf_fc = 1.0
-                if self.b_in>2.5:
-                    self.cf_fb = 1.2
-                else:
-                    self.cf_fb = 1.1
-            elif self.d_in>5.5:
-                self.cf_fc = 1.05
-                if self.b_in>2.5:
-                    self.cf_fb = 1.3
-                else:
-                    self.cf_fb = 1.2
-            elif self.d_in>4.5:
-                self.cf_fc = 1.1
-                self.cf_fb = 1.3
-            elif self.d_in>3.5:
-                self.cf_fc = 1.1
-                self.cf_fb = 1.4
-            else:
-                self.cf_fc = 1.15
-                self.cf_fb = 1.5
-                
+            self.assumptions = self.assumptions + 'Size Factor_Cf - Wall Studs are Southern Pine and stud is less than 4" thick and 12" wide. Cf = 1.0\n'
+            self.cf_fc = 1.0
+            self.cf_fb = 1.0
+            
         #Wet Service Factor, Cm
         #NDS 2005 section 4.3.3 and Table 4A
         #NOTE ASSUMES STUDS ARE VISUALLY GRADED DIMENSION LUMBER 2"-4" AND NOT SOUTHERN PINE AND NORTH AMERICAN SPECIES
-        self.assumptions = self.assumptions + 'Wet Service Factor_Cm - Wall Studs are visually graded dimensional lumber 2" to 4" North American Species and not Southern Pine\n'
+        self.assumptions = self.assumptions + 'Wet Service Factor_Cm - Wall Studs are visually graded dimensional lumber 2" to 4" North American Species or Southern Pine\n'
         if moisture_percent > 19:
             self.cm_fc_perp = 0.67
             self.cm_E = 0.9
