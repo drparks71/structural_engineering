@@ -1,4 +1,4 @@
-'''
+"""
 BSD 3-Clause License
 Copyright (c) 2019, Donald N. Bockoven III
 All rights reserved.
@@ -22,29 +22,28 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-'''
+"""
 
 from __future__ import division
-import matplotlib
 
-matplotlib.use('TKAgg')
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-from matplotlib.figure import Figure
+import os
+import time
+import math
+import itertools
+import numpy as np
+import scipy as sci
+
+from numpy.linalg import inv
+
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import PhotoImage
 from tkinter import filedialog
-import tkinter.font as TkFont
-import numpy as np
-from numpy.linalg import inv
-from numpy import unravel_index
-import scipy as sci
-import scipy.integrate
-import matplotlib.pyplot as plt
-import os
-import itertools
-import math
-from tkinter import messagebox
-import time
+
+import matplotlib
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+
+matplotlib.use('TKAgg')
 
 
 def load_pattern(num_spans):
