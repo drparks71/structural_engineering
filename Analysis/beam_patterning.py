@@ -66,8 +66,88 @@ def load_pattern(num_spans):
     return test
 
 
+def pl(p, a, l, x):
+    """
+    # //TODO - Finish updating the Docstrings for this function
+    # //TODO - Add Tests
+
+    Args:
+        p ():
+        a ():
+        l ():
+        x ():
+
+    Returns:
+
+    """
+    b = l - a
+    rl = (p * b) / l
+    rr = (p * a) / l
+    c4 = ((-rl * a ** 3) / 3) - ((rr * a ** 3) / 3) + ((rr * l * a ** 2) / 2)
+    c2 = (-1 / l) * ((c4) + ((rr * l ** 3) / 3))
+    c1 = ((-rr * a ** 2) / 2) - ((rl * a ** 2) / 2) + (rr * l * a) + c2
+    if x <= a:
+        v = rl
+        m = rl * x
+        eis = ((rl * x ** 2)  / 2) + c1
+        eid = ((rl * x ** 3) / 6) + (c1 * x)
+    else:
+        v = -1 * rr
+        m = (-1 * rr * x) + (rr * l)
+        eis = ((-1.0 * rr * x ** 2)/2.0) + (rr * l * x) + c2
+        eid = ((-rr * x ** 3) / 6) + ((rr * l * x ** 2) / 2) + (c2 * x) + c4
+    return (rl, rr, v, m, eid)
+
+
+def udl(W, a, b, l, x):
+    """
+    # // TODO - Finish Updating the Docstrings for this function
+    # // TODO - Add Tests
+
+    Args:
+        W ():
+        a ():
+        b ():
+        l ():
+        x ():
+
+    Returns:
+
+    """
+    c = b-a
+    rl = (W * c) - (((W * c) * (a + (c / 2))) / l)
+    rr = (((W * c) * (a + (c / 2))) / l)
+    c1 = 0
+    c2 = ((-1 * W * a ** 2) / 2)
+    c3 = rr * l
+    c7 = 0
+    c8 = ((-1 * c1 * a ** 2) / 2) + ((c2 * a ** 2) / 2) + ((5 * W * a ** 4) / 24) + c7
+    c9 = ((-1 * rl * b ** 3) / 3) - ((rr * b ** 3) / 3) + ((W * b ** 4) / 8) - ((W * a * b ** 3) / 3) - ((c2 * b ** 2) / 2) + ((c3 * b ** 2) / 2) + c8
+    c6 = ((rr * l ** 2) / 6) - ((c3 * l) / 2) - (c9 / l)
+    c5 = ((-1 * rl * b ** 2) / 2) + ((W * b ** 3) / 6) - ((W * a * b ** 2) / 2) - ((rr * b ** 2) / 2) + (c3 * b) - (c2 * b) + c6
+    c4 = ((W * a ** 3) / 3) + (c2 * a) + c5 - (c1 * a)
+    if x <= a:
+        v = rl
+        m = (rl * x) + c1
+        eis = ((rl * x ** 2) / 2) + (c1 * x) + c4
+        eid = ((rl * x ** 3) / 6) + ((c1 * x ** 2) / 2) + (c4 * x) + c7
+    elif x < b:
+        v = rl - (W * (x - a))
+        m = (rl * x) - ((W * x ** 2) / 2) + (W * a * x) + c2
+        eis = ((rl * x **2) / 2) - ((W * x ** 3) / 6) + ((W * a * x **2) / 2) + (c2 * x) + c5
+        eid = ((rl * x ** 3) / 6) - ((W * x ** 4) / 24) + ((W * a * x ** 3) / 6) + ((c2 * x ** 2) / 2) + (c5 * x) + c8
+    else:
+        v = -rr
+        m = (-1 * rr * x) + c3
+        eis = ((-1 * rr * x ** 2) / 2) + (c3 * x) + c6
+        eid = ((-1 * rr * x ** 3) / 6) + ((c3 * x ** 2) / 2) + (c6 * x) + c9
+    return (rl, rr, v, m, eid)
+
+
 def trapl(w1: object, w2: object, a: object, b: object, l: object, x: object) -> object:
     """
+    # //TODO - Finish updating the docstring on this function
+    # //TODO - Add tests
 
     Args:
         w1 ():
@@ -783,7 +863,7 @@ class Results_window():
         self.canvas.show()
         self.canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
-        self.toolbar = NavigationToolbar2TkAgg(self.canvas, self.chart_frame)
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self.chart_frame)
         self.toolbar.update()
         self.canvas._tkcanvas.pack(side=tk.TOP, fill=tk.BOTH, expand=1)
 
