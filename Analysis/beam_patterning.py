@@ -50,7 +50,7 @@ def load_pattern(num_spans):
     Function that takes in the number of spans and returns a list of tuples, used in class Main_Window
 
     :param num_spans: The number of spans of the structure
-    :return test: list of tuples
+    :return test: list of tuples of all possible combinations of loads
     """
     test = []
     for r in range(num_spans):
